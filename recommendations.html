@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Recommendations</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/static/app.js"></script>
+    <script src="/static/recommendations.js"></script>
+    <script type="text/javascript">
+        function getRecommendations() {
+            var jobDesc = $("#job-desc").val();
+            var userResume = $("#user-resume").val();
+
+            $.ajax({
+                type: "POST",
+                url: "/get_recommendations",
+                data: JSON.stringify({
+                    "job_desc": jobDesc,
+                    "user_resume": userResume
+                }),
+                contentType: "application/json",
+                dataType: "json",
+                success: function(data) {
+                    var tableHtml = "<table><thead><tr><th>Job Title</th><th>Company</th><th>Location</th><th>Description</th></tr></thead><tbody>";
+                    for (var i = 0; i < data.length; i++) {
+                        var job = data[i];
+                        tableHtml += "<tr><td>" + job.title + "</td><td>" + job.company + "</td><td>" + job.location + "</td><td>" + job.description + "</td></tr>";
+                    }
+                    tableHtml += "</tbody></table>";
+                    $("#recommendations").html(tableHtml);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Job Recommendations</h1>
+    <label for="job-desc">Job Description:</label>
+    <input type="text" id="job-desc"><br>
+    <label for="user-resume">User Resume:</label>
+    <input type="text" id="user-resume"><br>
+    <button onclick="location.href='http://localhost:3000/out.html'">getRecommendations</button>
+    </button>
+</body>
+</html>
